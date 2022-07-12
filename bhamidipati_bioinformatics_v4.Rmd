@@ -1,0 +1,70 @@
+---
+title: "bhamidipati_bioinformatics"
+author: 'Sai Krishna Bhamidipati (PID: A59010579)'
+date: "`r Sys.Date()`"
+output: github_document
+---
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+
+#Loading all necessary functions
+
+library(tidyverse)
+library(lubridate)
+library("ggplot2")
+library(dplyr)
+```
+
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+
+#Reading the COVID-19 Variant Data from the CHHS website
+
+data <- read.csv("covid19_variants.csv")
+
+#Just making sure to parse out the dates into year-month-day formats
+data$date <- ymd(data$date)
+```
+
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+
+#Removing rows containing "Total"s.
+data_1 <- data[- grep("Total", data$variant_name),]
+
+#Removing rows containing "Other" as per the example graph given.
+data_2 <- data_1[- grep("Other", data_1$variant_name),]
+
+#Removing June 2022 stuff, since it was not there in the example given.
+data_3 <- data_2[- grep("2022-06", data_2$date),]
+```
+
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+
+#package that has theme components for ggplot2.
+library(hrbrthemes)
+
+#plotting the data with date on x axis and percentage of sequenced specimens on y axis
+  ggplot( data = data_3, mapping = aes( x=date, y=percentage, color=variant_name ) )+
+#Grouping according to variant types
+  geom_line(aes( group=variant_name ))+
+#Adding title for the graph and label for y-axis.
+  labs(title = "Covid-19 Variants in California", y = "Percentage of sequenced specimens")+
+#Scaling the x-axis to show 1 month intervals, and the labels having abbreviated months and unabbreviated year. Also, as per the example given, only including data until May 2022
+  scale_x_date(date_breaks = "1 month", date_labels = "%b %Y", limit=c(as.Date("2021-01-01"),as.Date("2022-05-1")))+
+#Rotating the dates to an angle
+  theme_ipsum() +
+  theme(axis.text.x=element_text(angle=60, hjust=1))+
+#Removing x-axis and legend titles to match the example given.
+  theme(axis.title.x = element_blank(),legend.title=element_blank())+
+#Adding a border for the graph, as in the example.
+  theme(panel.border = element_rect(color = "black",
+                                    fill = NA,
+                                    size = 0.5))+
+#Centering the y-axis title
+  theme(axis.title.y = element_text(hjust=0.5))
+```
+
+
+
