@@ -5,6 +5,9 @@ date: "`r Sys.Date()`"
 output: github_document
 ---
 
+**Sai Krishna Bhamidipati**
+**PID: A59010579**
+
 ```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 
 #Loading all necessary functions
@@ -47,17 +50,24 @@ library(hrbrthemes)
 
 #plotting the data with date on x axis and percentage of sequenced specimens on y axis
   ggplot( data = data_3, mapping = aes( x=date, y=percentage, color=variant_name ) )+
+  
 #Grouping according to variant types
   geom_line(aes( group=variant_name ))+
+  
 #Adding title for the graph and label for y-axis.
-  labs(title = "Covid-19 Variants in California", y = "Percentage of sequenced specimens")+
-#Scaling the x-axis to show 1 month intervals, and the labels having abbreviated months and unabbreviated year. Also, as per the example given, only including data until May 2022
+  labs(title = "Covid-19 Variants in California", x=" ",y = "Percentage of sequenced specimens", caption = "Data source: <https://www.cdph.ca.gov>")+
+  
+#Scaling the x-axis to show 1 month intervals, and the labels having abbreviated months 
+#and unabbreviated year. Also, as per the example given, only including data until May 2022
   scale_x_date(date_breaks = "1 month", date_labels = "%b %Y", limit=c(as.Date("2021-01-01"),as.Date("2022-05-1")))+
+  
 #Rotating the dates to an angle
   theme_ipsum() +
   theme(axis.text.x=element_text(angle=60, hjust=1))+
+  
 #Removing x-axis and legend titles to match the example given.
   theme(axis.title.x = element_blank(),legend.title=element_blank())+
+  
 #Adding a border for the graph, as in the example.
   theme(panel.border = element_rect(color = "black",
                                     fill = NA,
